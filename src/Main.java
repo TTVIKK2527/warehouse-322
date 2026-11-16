@@ -14,15 +14,14 @@ public final class Main {
             while (running) {
                 System.out.println("\n1 Kõik | 2 Lisa toit | 3 Lisa elektroonika | 4 Muuda kogust | 5 Otsi | 6 Koguväärtus | 0 Välju");
                 try {
-                    switch (read(input, "Valik: ")) {
+                    String choice = read(input, "Valik: ");
+                    switch (choice) {
                         case "1" -> inventory.search("").forEach(System.out::println);
                         case "2", "3" -> {
-                            // Capture the product kind before reading its remaining fields.
-                            String kind = lastChoice;
                             String name = read(input, "Nimi: ");
                             BigDecimal price = new BigDecimal(read(input, "Hind (nt 1.25): "));
                             int quantity = Integer.parseInt(read(input, "Kogus: "));
-                            Product product = kind.equals("2")
+                            Product product = choice.equals("2")
                                 ? new FoodProduct(name, price, quantity, LocalDate.parse(read(input, "Parim enne (AAAA-KK-PP): ")))
                                 : new ElectronicProduct(name, price, quantity, Integer.parseInt(read(input, "Garantii kuudes: ")));
                             inventory.add(product);
@@ -40,13 +39,10 @@ public final class Main {
         }
         System.out.println("Head aega! Selle harjutuse andmed on ainult mälus.");
     }
-    private static String lastChoice;
     private static String read(Scanner input, String prompt) {
         System.out.print(prompt);
         if (!input.hasNextLine()) throw new EndOfInput();
-        String result = input.nextLine();
-        if (prompt.equals("Valik: ")) lastChoice = result;
-        return result;
+        return input.nextLine();
     }
     private static final class EndOfInput extends RuntimeException { private static final long serialVersionUID = 1L; }
 }
